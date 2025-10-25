@@ -1,66 +1,14 @@
+// script.js — somente trechos relevantes para a sua pergunta
+
+// ====== MOCK estático (mantido) ======
 const MOCK_DATA = [
-    {
-        id: "lidocaina",
-        nome: "Lidocaína",
-        maxMgKg: 7,
-        maxAbsolutoMg: 500,
-        idealMgKg: 3,
-        precaucoes: [
-            "Ajustar em disfunção hepática [mock].",
-            "Monitorar sinais de toxicidade sistêmica [mock].",
-        ],
-        bulas: [
-            { nome: "Lidocaína 1% (Genérico)", tipo: "Profissional", url: "#" },
-            { nome: "Xylocaína", tipo: "Paciente", url: "#" },
-        ],
-    },
-    {
-        id: "bupivacaina",
-        nome: "Bupivacaína",
-        maxMgKg: 2.5,
-        maxAbsolutoMg: 175,
-        idealMgKg: 1.25,
-        precaucoes: [
-            "Maior cardiotoxicidade relativa [mock].",
-            "Evitar injeção intravascular [mock].",
-        ],
-        bulas: [
-            { nome: "Bupivacaína 0,5%", tipo: "Profissional", url: "#" },
-            { nome: "Marca A", tipo: "Paciente", url: "#" },
-        ],
-    },
-    {
-        id: "mepivacaina",
-        nome: "Mepivacaína",
-        maxMgKg: 6.6,
-        maxAbsolutoMg: 400,
-        idealMgKg: 3,
-        precaucoes: [
-            "Pode ser sem vasoconstrictor [mock].",
-            "Cautela em neonatos [mock].",
-        ],
-        bulas: [
-            { nome: "Mepivacaína 2%", tipo: "Profissional", url: "#" },
-        ],
-    },
-    {
-        id: "articaina",
-        nome: "Articaína",
-        maxMgKg: 7,
-        maxAbsolutoMg: 500,
-        idealMgKg: 3.5,
-        precaucoes: [
-            "Metabolismo também por esterases [mock].",
-            "Cautela em crianças pequenas [mock].",
-        ],
-        bulas: [
-            { nome: "Articaína + Epinefrina", tipo: "Profissional", url: "#" },
-            { nome: "Marca B", tipo: "Paciente", url: "#" },
-        ],
-    },
+    { id: "lidocaina",  nome: "Lidocaína"  },
+    { id: "bupivacaina",nome: "Bupivacaína"},
+    { id: "mepivacaina",nome: "Mepivacaína"},
+    { id: "articaina",  nome: "Articaína"  },
 ];
 
-// ========================= ELEMENTOS =========================
+// ====== Bindings de UI (já existentes no seu HTML) ======
 const select = document.getElementById("anestheticSelect");
 const pesoBlock = document.getElementById("pesoBlock");
 const concBlock = document.getElementById("concBlock");
@@ -72,7 +20,7 @@ const bulasBlock = document.getElementById("bulasBlock");
 const resultBody = document.getElementById("resultBody");
 const bulasBody = document.getElementById("bulasBody");
 
-// ========================= POPULAR SELECT =========================
+// Popular select com MOCK fixo
 (function populate(){
     for(const item of MOCK_DATA){
         const opt = document.createElement("option");
@@ -82,28 +30,142 @@ const bulasBody = document.getElementById("bulasBody");
     }
 })();
 
-// ========================= HELPERS =========================
+// ====== Utilitários genéricos ======
 const toNumber = (v) => Number(String(v).replace(",", "."));
 const round = (n, p=2) => Number.isFinite(n) ? Number(n.toFixed(p)) : NaN;
 const percentToMgPerMl = (percent) => percent * 10;
 
-// ========================= REGRAS MOCK =========================
-function calcular(anest, pesoKg, percent){
-    const mgPerMl = percentToMgPerMl(percent);
-    const doseMaxMgCap = Math.min(anest.maxMgKg * pesoKg, anest.maxAbsolutoMg);
-    const doseIdealMg = anest.idealMgKg * pesoKg;
+// ====== Tipo de retorno padronizado ======
+// { doseIdealMg:number, doseMaxMg:number, volIdealMl:number, volMaxMl:number, precaucoes:string[], bulas:Array<{nome,tipo,url}> }
+// OBS: as funções por anestésico abaixo são mocks de teste.
+
+// ====== Funções por anestésico (mocks) ======
+function calcLidocaina({ pesoKg, concPct }){
+    const mgMl = percentToMgPerMl(concPct);
+    const idealMgKg = 3;      // MOCK
+    const maxMgKg   = 7;      // MOCK
+    const maxAbsMg  = 500;    // MOCK
+
+    const doseIdealMg = idealMgKg * pesoKg;
+    const doseMaxMg   = Math.min(maxMgKg * pesoKg, maxAbsMg);
 
     return {
-        doseMaxMg: doseMaxMgCap,
         doseIdealMg,
-        volMaxMl: mgPerMl ? doseMaxMgCap / mgPerMl : NaN,
-        volIdealMl: mgPerMl ? doseIdealMg / mgPerMl : NaN,
+        doseMaxMg,
+        volIdealMl: mgMl ? doseIdealMg / mgMl : NaN,
+        volMaxMl:   mgMl ? doseMaxMg   / mgMl : NaN,
+        precaucoes: [
+            "Ajustar em disfunção hepática [mock].",
+            "Monitorar sinais de toxicidade sistêmica [mock].",
+        ],
+        bulas: [
+            { nome: "Lidocaína 1% (Genérico)", tipo: "Profissional", url: "#" },
+            { nome: "Xylocaína",                tipo: "Paciente",    url: "#" },
+        ],
     };
 }
 
-// ========================= UX PROGRESSIVA =========================
+function calcBupivacaina({ pesoKg, concPct }){
+    const mgMl = percentToMgPerMl(concPct);
+    const idealMgKg = 1.25;   // MOCK
+    const maxMgKg   = 2.5;    // MOCK
+    const maxAbsMg  = 175;    // MOCK
+
+    const doseIdealMg = idealMgKg * pesoKg;
+    const doseMaxMg   = Math.min(maxMgKg * pesoKg, maxAbsMg);
+
+    return {
+        doseIdealMg,
+        doseMaxMg,
+        volIdealMl: mgMl ? doseIdealMg / mgMl : NaN,
+        volMaxMl:   mgMl ? doseMaxMg   / mgMl : NaN,
+        precaucoes: [
+            "Maior cardiotoxicidade relativa; evitar injeção intravascular [mock].",
+            "Cautela em cardiopatas/gestantes [mock].",
+        ],
+        bulas: [
+            { nome: "Bupivacaína 0,5%", tipo: "Profissional", url: "#" },
+            { nome: "Marca A",          tipo: "Paciente",    url: "#" },
+        ],
+    };
+}
+
+function calcMepivacaina({ pesoKg, concPct }){
+    const mgMl = percentToMgPerMl(concPct);
+    const idealMgKg = 3;      // MOCK
+    const maxMgKg   = 6.6;    // MOCK
+    const maxAbsMg  = 400;    // MOCK
+
+    const doseIdealMg = idealMgKg * pesoKg;
+    const doseMaxMg   = Math.min(maxMgKg * pesoKg, maxAbsMg);
+
+    return {
+        doseIdealMg,
+        doseMaxMg,
+        volIdealMl: mgMl ? doseIdealMg / mgMl : NaN,
+        volMaxMl:   mgMl ? doseMaxMg   / mgMl : NaN,
+        precaucoes: [
+            "Pode ser sem vasoconstrictor [mock].",
+            "Cautela em neonatos [mock].",
+        ],
+        bulas: [
+            { nome: "Mepivacaína 2%", tipo: "Profissional", url: "#" },
+        ],
+    };
+}
+
+function calcArticaina({ pesoKg, concPct }){
+    const mgMl = percentToMgPerMl(concPct);
+    const idealMgKg = 3.5;    // MOCK
+    const maxMgKg   = 7;      // MOCK
+    const maxAbsMg  = 500;    // MOCK
+
+    const doseIdealMg = idealMgKg * pesoKg;
+    const doseMaxMg   = Math.min(maxMgKg * pesoKg, maxAbsMg);
+
+    return {
+        doseIdealMg,
+        doseMaxMg,
+        volIdealMl: mgMl ? doseIdealMg / mgMl : NaN,
+        volMaxMl:   mgMl ? doseMaxMg   / mgMl : NaN,
+        precaucoes: [
+            "Metabolismo também por esterases [mock].",
+            "Cautela em crianças pequenas [mock].",
+        ],
+        bulas: [
+            { nome: "Articaína + Epinefrina", tipo: "Profissional", url: "#" },
+            { nome: "Marca B",                 tipo: "Paciente",    url: "#" },
+        ],
+    };
+}
+
+// ====== Roteador genérico por anestésico ======
+const calculators = {
+    "lidocaina":    calcLidocaina,
+    "bupivacaina":  calcBupivacaina,
+    "mepivacaina":  calcMepivacaina,
+    "articaina":    calcArticaina,
+};
+
+// Função de orquestração: captura dados da UI e delega ao cálculo correto
+function calcularGenerico(){
+    const anestId = select.value;
+    const pesoKg  = toNumber(pesoInput.value);
+    const concPct = toNumber(concInput.value);
+
+    if(!anestId)   throw new Error("Anestésico não selecionado.");
+    if(!(pesoKg>0))throw new Error("Peso inválido.");
+    if(!(concPct>0))throw new Error("Concentração inválida.");
+
+    const fn = calculators[anestId];
+    if(typeof fn !== "function") throw new Error("Cálculo não implementado para: " + anestId);
+
+    // Executa a função específica, retornando o payload padronizado
+    return fn({ pesoKg, concPct });
+}
+
+// ====== Fluxo de UX progressiva (igual ao seu) ======
 select.addEventListener("change", () => {
-    // Mostrar peso somente após escolher anestésico
     if(select.value){
         pesoBlock.classList.remove("hidden");
         pesoInput.focus();
@@ -117,75 +179,54 @@ select.addEventListener("change", () => {
 });
 
 pesoInput.addEventListener("input", () => {
-    const pesoOk = toNumber(pesoInput.value) > 0;
-    // Mostrar concentração somente após peso válido
-    if(pesoOk){
-        concBlock.classList.remove("hidden");
-    }else{
-        concBlock.classList.add("hidden");
-        calcBtn.disabled = true;
-    }
+    const ok = toNumber(pesoInput.value) > 0;
+    concBlock.classList.toggle("hidden", !ok);
+    calcBtn.disabled = true;
 });
-
 concInput.addEventListener("input", () => {
-    const concOk = toNumber(concInput.value) > 0;
-    calcBtn.disabled = !concOk;
+    const ok = toNumber(concInput.value) > 0;
+    calcBtn.disabled = !ok;
 });
 
-// ========================= CÁLCULO / RENDER =========================
+// ====== Handler do botão: usa o retorno padronizado para renderizar ======
 calcBtn.addEventListener("click", () => {
-    const anest = MOCK_DATA.find(x => x.id === select.value);
-    const pesoKg = toNumber(pesoInput.value);
-    const conc = toNumber(concInput.value);
+    try{
+        const r = calcularGenerico();
 
-    if(!anest || !(pesoKg>0) || !(conc>0)) return;
-
-    const r = calcular(anest, pesoKg, conc);
-
-    // preencher tabela de resultados
-    resultBody.innerHTML = "";
-    const tr = document.createElement("tr");
-    const idealTd = document.createElement("td");
-    const maxTd = document.createElement("td");
-    const obsTd = document.createElement("td");
-
-    idealTd.innerHTML = `
-    <div><strong>${round(r.doseIdealMg)} mg</strong> (${round(r.volIdealMl)} mL @ ${conc}%)</div>
-    <span class="badge muted">alvo mock</span>
-  `;
-    maxTd.innerHTML = `
-    <div><strong>${round(r.doseMaxMg)} mg</strong> (${round(r.volMaxMl)} mL @ ${conc}%)</div>
-    <span class="badge muted">teto mock</span>
-  `;
-    obsTd.innerHTML = `
-    <ul class="muted">
-      ${anest.precaucoes.map(p=>`<li>${p}</li>`).join("")}
-    </ul>
-  `;
-
-    tr.appendChild(idealTd);
-    tr.appendChild(maxTd);
-    tr.appendChild(obsTd);
-    resultBody.appendChild(tr);
-
-    // preencher tabela de bulas
-    bulasBody.innerHTML = "";
-    for(const b of anest.bulas){
-        const trb = document.createElement("tr");
-        trb.innerHTML = `
-      <td>${b.nome}</td>
-      <td>${b.tipo}</td>
-      <td><a href="${b.url}" target="_blank" rel="noopener">Abrir</a></td>
+        // tabela de resultados
+        resultBody.innerHTML = "";
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+      <td>
+        <div><strong>${round(r.doseIdealMg)} mg</strong> (${round(r.volIdealMl)} mL)</div>
+        <span class="badge muted">mock</span>
+      </td>
+      <td>
+        <div><strong>${round(r.doseMaxMg)} mg</strong> (${round(r.volMaxMl)} mL)</div>
+        <span class="badge muted">mock</span>
+      </td>
+      <td>
+        <ul class="muted">
+          ${r.precaucoes.map(p=>`<li>${p}</li>`).join("")}
+        </ul>
+      </td>
     `;
-        bulasBody.appendChild(trb);
+        resultBody.appendChild(tr);
+        resultBlock.classList.remove("hidden");
+
+        // tabela de bulas
+        bulasBody.innerHTML = "";
+        for(const b of r.bulas){
+            const trb = document.createElement("tr");
+            trb.innerHTML = `
+        <td>${b.nome}</td>
+        <td>${b.tipo}</td>
+        <td><a href="${b.url}" target="_blank" rel="noopener">Abrir</a></td>
+      `;
+            bulasBody.appendChild(trb);
+        }
+        bulasBlock.classList.remove("hidden");
+    }catch(err){
+        alert(err.message || String(err));
     }
-
-    resultBlock.classList.remove("hidden");
-    bulasBlock.classList.remove("hidden");
 });
-
-// ========================= PONTOS DE TROCA (dados reais) =========================
-// - Substituir MOCK_DATA por fetch("anestesicos.json") mantendo a mesma estrutura.
-// - Ajustar regras em calcular() por fármaco (sem/com vasoconstrictor, limites por cartucho, etc.).
-// - Popular 'bulas' com URLs reais.
-// - Validar limites pediátricos/geriátricos conforme protocolo institucional.
