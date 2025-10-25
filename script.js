@@ -36,10 +36,8 @@ const round = (n, p=2) => Number.isFinite(n) ? Number(n.toFixed(p)) : NaN;
 const percentToMgPerMl = (percent) => percent * 10;
 
 // ====== Tipo de retorno padronizado ======
-// { doseIdealMg:number, doseMaxMg:number, volIdealMl:number, volMaxMl:number, precaucoes:string[], bulas:Array<{nome,tipo,url}> }
-// OBS: as funções por anestésico abaixo são mocks de teste.
+// { doseIdealMg:number, doseMaxMg:number, volIdealMl:number, volMaxMl:number, precaucoes:string[], bulas:Array<{nome,url}> }
 
-// ====== Funções por anestésico (mocks) ======
 function calcLidocaina({ pesoKg, concPct }){
     const mgMl = percentToMgPerMl(concPct);
     const idealMgKg = 3;      // MOCK
@@ -55,12 +53,11 @@ function calcLidocaina({ pesoKg, concPct }){
         volIdealMl: mgMl ? doseIdealMg / mgMl : NaN,
         volMaxMl:   mgMl ? doseMaxMg   / mgMl : NaN,
         precaucoes: [
-            "Ajustar em disfunção hepática [mock].",
-            "Monitorar sinais de toxicidade sistêmica [mock].",
+            "Pegar da bula precauções e efeitos colaterais.",
         ],
         bulas: [
-            { nome: "Lidocaína 1% (Genérico)", tipo: "Profissional", url: "#" },
-            { nome: "Xylocaína",                tipo: "Paciente",    url: "#" },
+            { nome: "EMS", url: "https://hypofarma.com.br/wp-content/uploads/2023/08/Medicamento_Bula_Paciente-Lidocaina-SV-10mg-20mL-e-20mg-5mL.pdf" },
+            { nome: "Neoquimica", url: "https://www.neoquimica.com.br/nossas-marcas/bula/lidogel" },
         ],
     };
 }
@@ -80,12 +77,11 @@ function calcBupivacaina({ pesoKg, concPct }){
         volIdealMl: mgMl ? doseIdealMg / mgMl : NaN,
         volMaxMl:   mgMl ? doseMaxMg   / mgMl : NaN,
         precaucoes: [
-            "Maior cardiotoxicidade relativa; evitar injeção intravascular [mock].",
-            "Cautela em cardiopatas/gestantes [mock].",
+            "Pegar da bula precauções e efeitos colaterais.",
         ],
         bulas: [
-            { nome: "Bupivacaína 0,5%", tipo: "Profissional", url: "#" },
-            { nome: "Marca A",          tipo: "Paciente",    url: "#" },
+            { nome: "Teuto", url: "https://hypofarma.com.br/wp-content/uploads/2023/08/Medicamento_Bula_Paciente-Lidocaina-SV-10mg-20mL-e-20mg-5mL.pdf" },
+            { nome: "Teste", url: "https://www.neoquimica.com.br/nossas-marcas/bula/lidogel" },
         ],
     };
 }
@@ -105,11 +101,11 @@ function calcMepivacaina({ pesoKg, concPct }){
         volIdealMl: mgMl ? doseIdealMg / mgMl : NaN,
         volMaxMl:   mgMl ? doseMaxMg   / mgMl : NaN,
         precaucoes: [
-            "Pode ser sem vasoconstrictor [mock].",
-            "Cautela em neonatos [mock].",
+            "Pegar da bula precauções e efeitos colaterais.",
         ],
         bulas: [
-            { nome: "Mepivacaína 2%", tipo: "Profissional", url: "#" },
+            { nome: "EMS", url: "https://hypofarma.com.br/wp-content/uploads/2023/08/Medicamento_Bula_Paciente-Lidocaina-SV-10mg-20mL-e-20mg-5mL.pdf" },
+            { nome: "Neoquimica", url: "https://www.neoquimica.com.br/nossas-marcas/bula/lidogel" },
         ],
     };
 }
@@ -129,12 +125,11 @@ function calcArticaina({ pesoKg, concPct }){
         volIdealMl: mgMl ? doseIdealMg / mgMl : NaN,
         volMaxMl:   mgMl ? doseMaxMg   / mgMl : NaN,
         precaucoes: [
-            "Metabolismo também por esterases [mock].",
-            "Cautela em crianças pequenas [mock].",
+            "Pegar da bula precauções e efeitos colaterais.",
         ],
         bulas: [
-            { nome: "Articaína + Epinefrina", tipo: "Profissional", url: "#" },
-            { nome: "Marca B",                 tipo: "Paciente",    url: "#" },
+            { nome: "EMS", url: "https://hypofarma.com.br/wp-content/uploads/2023/08/Medicamento_Bula_Paciente-Lidocaina-SV-10mg-20mL-e-20mg-5mL.pdf" },
+            { nome: "Neoquimica", url: "https://www.neoquimica.com.br/nossas-marcas/bula/lidogel" },
         ],
     };
 }
@@ -199,11 +194,9 @@ calcBtn.addEventListener("click", () => {
         tr.innerHTML = `
       <td>
         <div><strong>${round(r.doseIdealMg)} mg</strong> (${round(r.volIdealMl)} mL)</div>
-        <span class="badge muted">mock</span>
       </td>
       <td>
         <div><strong>${round(r.doseMaxMg)} mg</strong> (${round(r.volMaxMl)} mL)</div>
-        <span class="badge muted">mock</span>
       </td>
       <td>
         <ul class="muted">
