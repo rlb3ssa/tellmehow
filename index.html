@@ -9,60 +9,68 @@
 </head>
 <body>
 <main class="container">
-    <h1>Calculadora de Anestésicos</h1>
+    <h1 class="page-title">Calculadora de Anestésicos</h1>
 
-    <div class="form-block">
-        <label for="anestheticSelect">Selecione o anestésico</label>
-        <select id="anestheticSelect">
-            <option value="">-- escolher --</option>
-            <!-- Preenchido via JS a partir de MOCK_DATA -->
-        </select>
-    </div>
+    <section class="panel">
+        <div class="grid grid-gap">
+            <div class="form-block">
+                <label for="anestheticSelect">Selecione o anestésico</label>
+                <select id="anestheticSelect">
+                    <option value="">-- escolher --</option>
+                </select>
+            </div>
 
-    <div id="inputsBlock" class="hidden">
-        <div class="form-row">
-            <label for="pesoInput">Peso do paciente (kg)</label>
-            <input id="pesoInput" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Ex.: 70.0" />
+            <div id="pesoBlock" class="form-block hidden">
+                <label for="pesoInput">Peso do paciente (kg)</label>
+                <input id="pesoInput" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Ex.: 70.0" />
+            </div>
+
+            <div id="concBlock" class="form-block hidden">
+                <label for="concInput">Concentração (%)</label>
+                <input id="concInput" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Ex.: 1.0" />
+            </div>
         </div>
 
-        <div class="form-row">
-            <label for="concInput">Concentração (%)</label>
-            <input id="concInput" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Ex.: 1.0" />
-            <small class="hint">Dica: 1% ≙ 10 mg/mL; 0,5% ≙ 5 mg/mL (fórmula mg/mL = % × 10) [educacional/mocked]</small>
+        <div class="actions">
+            <button id="calcBtn" class="btn" disabled>Calcular</button>
         </div>
-
-        <button id="calcBtn" class="btn">Calcular</button>
-    </div>
-
-    <section id="resultBlock" class="hidden">
-        <h2>Resultados</h2>
-        <div class="cards">
-            <article class="card">
-                <h3>Dosagem Máxima</h3>
-                <p id="doseMaxText">--</p>
-            </article>
-            <article class="card">
-                <h3>Dosagem Ideal</h3>
-                <p id="doseIdealText">--</p>
-            </article>
-            <article class="card">
-                <h3>Precauções</h3>
-                <ul id="precList"></ul>
-            </article>
-        </div>
-
-        <details class="note">
-            <summary>Notas e fórmulas</summary>
-            <ul>
-                <li>mg/mL = porcentagem × 10; exemplo: 2% → 20 mg/mL [educacional/mocked]</li>
-                <li>Volume (mL) = dose (mg) ÷ (mg/mL) [educacional/mocked]</li>
-            </ul>
-        </details>
     </section>
 
-    <footer class="disclaimer">
-        Este protótipo usa dados mockados apenas para fins de demonstração e não deve ser utilizado para decisões clínicas; substitua pelos valores oficiais e protocolos antes de qualquer uso real [educacional/mocked].
-    </footer>
+    <section id="resultBlock" class="panel hidden">
+        <h2>Resultados</h2>
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Dose Ideal</th>
+                    <th>Dose Máxima</th>
+                    <th>Observações</th>
+                </tr>
+                </thead>
+                <tbody id="resultBody">
+                <!-- preenchido via JS -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="bulasBlock" class="panel hidden">
+        <h2>Bulas</h2>
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Marca/Referência</th>
+                    <th>Tipo</th>
+                    <th>Link</th>
+                </tr>
+                </thead>
+                <tbody id="bulasBody">
+                <!-- preenchido via JS -->
+                </tbody>
+            </table>
+        </div>
+    </section>
 </main>
 
 <script src="./script.js"></script>
