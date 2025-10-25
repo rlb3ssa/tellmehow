@@ -93,13 +93,12 @@ select:focus,input:focus{border-color:#2f8cff;box-shadow:0 0 0 3px rgba(47,140,2
     border:1px solid var(--border);
     border-radius:12px;
 }
-
 .table{
     width:100%;
-    border-collapse:separate;
-    border-spacing:0;
+    border-collapse: collapse;
     min-width:720px;
 }
+
 .table thead th{
     text-align:left;
     background:#0f141b;
@@ -107,13 +106,21 @@ select:focus,input:focus{border-color:#2f8cff;box-shadow:0 0 0 3px rgba(47,140,2
     position:sticky;
     top:0;
     z-index:1;
+    border-bottom:2px solid #2f8cff;
 }
-.table th,.table td{
+
+.table th,
+.table td{
     padding:12px 14px;
     border-bottom:1px solid var(--border);
 }
-.table tbody tr:nth-child(odd){
-    background:#101620;
+
+.table tbody tr:last-child td{
+    border-bottom:0;
+}
+
+.table tbody tr:hover{
+    background:#0f141b;
 }
 .badge{
     display:inline-block;
