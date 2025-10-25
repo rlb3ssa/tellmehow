@@ -213,7 +213,6 @@ calcBtn.addEventListener("click", () => {
             const trb = document.createElement("tr");
             trb.innerHTML = `
         <td>${b.nome}</td>
-        <td>${b.tipo}</td>
         <td><a href="${b.url}" target="_blank" rel="noopener">Abrir</a></td>
       `;
             bulasBody.appendChild(trb);

@@ -126,3 +126,7 @@ select:focus,input:focus{border-color:#2f8cff;box-shadow:0 0 0 3px rgba(47,140,2
 }
 
 .muted{color:var(--muted)}
+
+.spaced{
+    margin: 8px;
+}
